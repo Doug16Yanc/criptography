@@ -1,11 +1,12 @@
 package douglas.cryptography.domain
 
+import douglas.cryptography.service.CryptoService
 import jakarta.persistence.*
 import kotlin.jvm.Transient
 
 @Entity
 @Table(name = "tb_messages")
-class Message {
+class Message(rawMessage: String, rawToken: String) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,24 +14,30 @@ class Message {
     val messageId: Long = 0
 
     @Column(name = "message_encrypted")
-    lateinit var messageEncrypted: String
+    var messageEncrypted: String? = null
 
     @Column(name = "token")
-    lateinit var token: String
+    var token: String? = null
 
     @Transient
-    var rawMessage: String? = null
+    var rawMessage: String? = rawMessage
 
     @Transient
-    var rawToken: String? = null
+    var rawToken: String? = rawToken
 
-
-    constructor(rawMessage: String, rawToken: String) {
-        this.rawMessage = rawMessage
-        this.rawToken = rawToken
-    }
 
     fun setMessage(rawMessage: String) {
         this.rawMessage = rawMessage
+    }
+    @PrePersist
+    fun prePersist() {
+        messageEncrypted = CryptoService.encrypt(rawMessage ?: "")
+        token = CryptoService.encrypt(rawToken ?: "")
+    }
+
+    @PostLoad
+    fun postLoad() {
+        messageEncrypted = CryptoService.encrypt(rawMessage ?: "")
+        token = CryptoService.encrypt(rawToken ?: "")
     }
 }

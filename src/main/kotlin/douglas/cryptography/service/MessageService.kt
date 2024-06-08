@@ -14,9 +14,7 @@ import org.springframework.web.server.ResponseStatusException
 
 
 @Service
-class MessageService {
-
-    lateinit var messageRepository : MessageRepository
+class MessageService ( private var messageRepository : MessageRepository) {
 
 
    fun create(createMessageRequest: CreateMessageRequest) {

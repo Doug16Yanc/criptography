@@ -4,20 +4,17 @@ import douglas.cryptography.domain.Message
 
 data class MessageResponse(
     var id : Long,
-    var message : String,
-    var token : String
+    var message : String? = null,
+    var token : String? = null
 ){
-    companion object{
-        fun fromMessage(message: Message) : MessageResponse? {
-            return message.rawMessage?.let {
-                message.rawToken?.let { it1 ->
-                    MessageResponse(
-                        message.messageId,
-                        it,
-                        it1
-                    )
-                }
-            }
+    companion object {
+        fun fromMessage(message: Message): MessageResponse {
+            return MessageResponse(
+                id = message.messageId,
+                message = message.rawMessage,
+                token = message.rawToken
+            )
         }
     }
+
 }

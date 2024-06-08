@@ -4,8 +4,11 @@ import org.jasypt.util.text.StrongTextEncryptor
 
 object CryptoService {
 
-    private val encryptor: StrongTextEncryptor = TODO()
+    private val encryptor: StrongTextEncryptor = StrongTextEncryptor()
 
+    init {
+        encryptor.setPassword("minha_senha")
+    }
 
     fun encrypt(rawText: String): String {
         return encryptor.encrypt(rawText)
@@ -15,4 +18,5 @@ object CryptoService {
         return encryptor.decrypt(encryptedText)
     }
 }
+
 
